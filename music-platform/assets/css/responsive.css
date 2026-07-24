@@ -1,0 +1,64 @@
+/* ============================================================
+   RESPONSIVE.CSS
+   ============================================================ */
+
+/* ── Tablet (≤ 1024px) ──────────────────────────────────── */
+@media (max-width: 1024px) {
+  .navbar__inner { grid-template-columns: auto 1fr auto; }
+  .navbar__search { max-width: 300px; }
+  .nav-links { display: none; }
+  .footer__grid { grid-template-columns: 1fr 1fr; gap: var(--space-8); }
+  .grid-4 { grid-template-columns: repeat(2, 1fr); }
+  .music-player { grid-template-columns: auto 1fr auto; }
+}
+
+/* ── Mobile (≤ 768px) ───────────────────────────────────── */
+@media (max-width: 768px) {
+  :root {
+    --navbar-height:  60px;
+    --player-height:  130px;
+  }
+
+  .container { padding-inline: var(--space-4); }
+  .navbar__search { display: none; }
+  .navbar__inner { grid-template-columns: auto 1fr auto; }
+
+  .display-1 { font-size: 2.2rem; }
+  .display-2 { font-size: 1.8rem; }
+
+  .grid-songs   { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: var(--space-3); }
+  .grid-artists { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: var(--space-3); }
+  .grid-3 { grid-template-columns: repeat(2, 1fr); }
+  .grid-4 { grid-template-columns: repeat(2, 1fr); }
+
+  .footer__grid { grid-template-columns: 1fr; }
+  .footer__bottom { flex-direction: column; gap: var(--space-4); text-align: center; }
+
+  .music-player {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    height: var(--player-height);
+    padding: var(--space-3) var(--space-4);
+    gap: var(--space-2);
+  }
+  .player__song-info { justify-content: space-between; }
+  .player__extras { display: none; }
+
+  .section-header { flex-direction: column; align-items: flex-start; gap: var(--space-2); }
+
+  .theme-toggle-text { display: none; }
+}
+
+/* ── Small Mobile (≤ 480px) ─────────────────────────────── */
+@media (max-width: 480px) {
+  .grid-songs { grid-template-columns: repeat(2, 1fr); }
+  .grid-artists { grid-template-columns: repeat(3, 1fr); }
+  .btn-lg { padding: 0.7rem 1.4rem; }
+  .hero__cta { flex-direction: column; }
+}
+
+/* ── Desktop extras ─────────────────────────────────────── */
+@media (min-width: 1280px) {
+  .grid-songs   { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+  .grid-artists { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
+}

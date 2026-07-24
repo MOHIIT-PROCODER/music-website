@@ -1,0 +1,1945 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>BeatWave — Discover, Stream &amp; Download Music</title>
+<meta name="description" content="BeatWave is your premium music platform — discover, stream, and download millions of songs.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════
+   THEME VARIABLES
+══════════════════════════════════════════════ */
+:root{
+  --transition-theme: background 0.35s ease, color 0.35s ease, border-color 0.35s ease;
+  --ease-spring: cubic-bezier(0.34,1.56,0.64,1);
+  --ease-out: cubic-bezier(0.22,1,0.36,1);
+}
+[data-theme="dark"]{
+  --bg-base:#0d1411;--bg-elevated:#121c18;--bg-card:#18241f;
+  --text-primary:#f2f7f4;--text-secondary:#9bb0a5;--text-muted:#5e7368;
+  --accent:#1db954;--accent2:#1ed760;--accent3:#00f2fe;
+  --border:rgba(29,185,84,0.12);--border-s:rgba(255,255,255,0.04);
+  --glass:rgba(255,255,255,0.05);--glass2:rgba(29,185,84,0.08);
+  --shadow-sm:0 2px 10px rgba(0,0,0,0.5);--shadow-md:0 10px 40px rgba(0,0,0,0.6);
+  --shadow-glow:0 0 60px rgba(29,185,84,0.3);
+  --player:rgba(18,28,24,0.98);
+  --success:#1db954;--error:#e74c3c;--warning:#f1c40f;
+  --nav-bg:rgba(13,20,17,0.85);
+}
+[data-theme="light"]{
+  --bg-base:#f8faf9;--bg-elevated:#ffffff;--bg-card:#ffffff;
+  --text-primary:#0f1715;--text-secondary:#2d4239;--text-muted:#587065;
+  --accent:#10b981;--accent2:#059669;--accent3:#047857;
+  --border:rgba(16,185,129,0.22);--border-s:rgba(0,0,0,0.08);
+  --glass:rgba(255,255,255,0.92);--glass2:rgba(16,185,129,0.12);
+  --shadow-sm:0 2px 12px rgba(0,0,0,0.06);--shadow-md:0 12px 32px rgba(0,0,0,0.12);
+  --shadow-glow:0 0 40px rgba(16,185,129,0.2);
+  --player:#ffffff;
+  --success:#10b981;--error:#ef4444;--warning:#f59e0b;
+  --nav-bg:rgba(248,250,249,0.92);
+}
+
+/* ══════════════════════════════════════════════
+   RESET & BASE
+══════════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;font-size:15px;}
+body{
+  font-family:'Inter',system-ui,sans-serif;line-height:1.6;
+  background:var(--bg-base);color:var(--text-primary);
+  transition:var(--transition-theme);min-height:100vh;
+  padding-bottom:88px;overflow-x:hidden;
+}
+a{color:inherit;text-decoration:none;}
+img{display:block;max-width:100%;height:auto;object-fit:cover;}
+button{background:none;border:none;cursor:pointer;font-family:inherit;color:inherit;}
+input{font-family:inherit;outline:none;}
+ul{list-style:none;}
+
+/* ══════════════════════════════════════════════
+   KEYFRAME ANIMATIONS
+══════════════════════════════════════════════ */
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:none;}}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+@keyframes slideRight{from{opacity:0;transform:translateX(-24px);}to{opacity:1;transform:none;}}
+@keyframes scaleIn{from{opacity:0;transform:scale(0.88);}to{opacity:1;transform:scale(1);}}
+@keyframes spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(108,71,255,0.4);}50%{box-shadow:0 0 0 14px rgba(108,71,255,0);}}
+@keyframes bars{0%,100%{height:8px;}50%{height:20px;}}
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-12px);}}
+@keyframes shimmer{from{transform:translateX(-100%);}to{transform:translateX(100%);}}
+@keyframes toastIn{from{opacity:0;transform:translateX(60px);}to{opacity:1;transform:none;}}
+@keyframes toastOut{to{opacity:0;transform:translateX(60px);}}
+@keyframes navReveal{from{opacity:0;transform:translateY(-100%);}to{opacity:1;transform:none;}}
+@keyframes orb1{0%,100%{transform:translate(0,0) scale(1);}33%{transform:translate(30px,-20px) scale(1.1);}66%{transform:translate(-20px,15px) scale(0.95);}}
+@keyframes orb2{0%,100%{transform:translate(0,0) scale(1);}33%{transform:translate(-25px,20px) scale(1.05);}66%{transform:translate(20px,-10px) scale(1.08);}}
+
+/* ══════════════════════════════════════════════
+   REVEAL ON SCROLL
+══════════════════════════════════════════════ */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity 0.6s var(--ease-out),transform 0.6s var(--ease-out);}
+.reveal.visible{opacity:1;transform:none;}
+.reveal-left{opacity:0;transform:translateX(-28px);transition:opacity 0.6s var(--ease-out),transform 0.6s var(--ease-out);}
+.reveal-left.visible{opacity:1;transform:none;}
+.reveal-scale{opacity:0;transform:scale(0.9);transition:opacity 0.5s var(--ease-out),transform 0.5s var(--ease-out);}
+.reveal-scale.visible{opacity:1;transform:scale(1);}
+/* Stagger children */
+.stagger>.reveal:nth-child(1){transition-delay:0ms;}
+.stagger>.reveal:nth-child(2){transition-delay:60ms;}
+.stagger>.reveal:nth-child(3){transition-delay:120ms;}
+.stagger>.reveal:nth-child(4){transition-delay:180ms;}
+.stagger>.reveal:nth-child(5){transition-delay:240ms;}
+.stagger>.reveal:nth-child(6){transition-delay:300ms;}
+.stagger>.reveal:nth-child(7){transition-delay:360ms;}
+.stagger>.reveal:nth-child(8){transition-delay:420ms;}
+
+/* ══════════════════════════════════════════════
+   TABBED PAGE SWITCHER (Spotify / Apple Music Style)
+══════════════════════════════════════════════ */
+.tab-page{display:none;animation:fadeIn 0.35s var(--ease-out) both;}
+.tab-page.active{display:block;}
+.container{max-width:1280px;margin:0 auto;padding:0 1.5rem;}
+.section{padding:4rem 0;}
+.section-sm{padding:2.5rem 0;}
+.section-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:2rem;gap:1rem;flex-wrap:wrap;}
+
+/* ══════════════════════════════════════════════
+   TYPOGRAPHY
+══════════════════════════════════════════════ */
+.display-1{font-family:'Plus Jakarta Sans',sans-serif;font-size:clamp(2.4rem,6vw,5.2rem);font-weight:900;line-height:1.05;letter-spacing:-0.03em;}
+.display-2{font-family:'Plus Jakarta Sans',sans-serif;font-size:clamp(1.7rem,3.5vw,2.8rem);font-weight:800;line-height:1.1;letter-spacing:-0.02em;}
+.heading-2{font-family:'Plus Jakarta Sans',sans-serif;font-size:1.35rem;font-weight:700;}
+.eyebrow{font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;color:var(--accent);}
+.truncate{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.text-gradient{background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.text-muted{color:var(--text-muted);}
+
+/* ══════════════════════════════════════════════
+   NAVBAR
+══════════════════════════════════════════════ */
+.navbar{
+  position:sticky;top:0;z-index:100;
+  background:var(--nav-bg);backdrop-filter:blur(24px) saturate(180%);
+  -webkit-backdrop-filter:blur(24px) saturate(180%);
+  border-bottom:1px solid var(--border);
+  transition:var(--transition-theme),box-shadow 0.3s;
+  animation:navReveal 0.5s var(--ease-out) both;
+}
+.navbar.scrolled{box-shadow:var(--shadow-md);}
+.navbar__inner{display:flex;align-items:center;height:66px;gap:1.5rem;}
+.navbar__logo{display:flex;align-items:center;gap:0.6rem;font-family:'Plus Jakarta Sans',sans-serif;font-weight:900;font-size:1.3rem;flex-shrink:0;transition:transform 0.2s var(--ease-spring);}
+.navbar__logo:hover{transform:scale(1.04);}
+.navbar__logo-icon{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#6c47ff,#ff4785);display:flex;align-items:center;justify-content:center;color:#fff;box-shadow:0 4px 14px rgba(108,71,255,0.45);flex-shrink:0;}
+.navbar__nav{display:flex;gap:2px;flex:1;}
+.navbar__link{padding:0.42rem 0.88rem;border-radius:99px;font-weight:500;font-size:0.88rem;color:var(--text-secondary);transition:all 0.15s;position:relative;}
+.navbar__link:hover{color:var(--text-primary);background:var(--glass);}
+.navbar__link.active{color:var(--text-primary);background:var(--glass);}
+.navbar__right{display:flex;align-items:center;gap:0.65rem;margin-left:auto;flex-shrink:0;}
+
+/* Navbar Search */
+.nav-search{position:relative;}
+.nav-search input{
+  background:var(--glass);border:1px solid var(--border);border-radius:99px;
+  padding:0.42rem 1rem 0.42rem 2.2rem;font-size:0.85rem;
+  color:var(--text-primary);width:200px;transition:all 0.25s;
+}
+.nav-search input:focus{width:260px;border-color:var(--accent);box-shadow:0 0 0 3px rgba(108,71,255,0.18);}
+.nav-search input::placeholder{color:var(--text-muted);}
+.nav-search svg{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--text-muted);pointer-events:none;}
+
+/* Mobile Menu Toggle */
+.hamburger{display:none;flex-direction:column;gap:5px;padding:6px;border-radius:8px;transition:background 0.15s;}
+.hamburger:hover{background:var(--glass);}
+.hamburger span{width:22px;height:2px;background:var(--text-primary);border-radius:2px;transition:transform 0.3s,opacity 0.3s;}
+.hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.hamburger.open span:nth-child(2){opacity:0;}
+.hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+
+/* Mobile Drawer */
+.mobile-drawer{
+  display:none;position:fixed;top:66px;left:0;right:0;bottom:0;
+  background:var(--bg-base);z-index:99;
+  transform:translateX(-100%);transition:transform 0.35s var(--ease-out);
+  padding:1.5rem;overflow-y:auto;
+}
+.mobile-drawer.open{transform:none;}
+.mobile-drawer .mob-link{
+  display:flex;align-items:center;gap:0.75rem;padding:0.85rem 1rem;
+  border-radius:12px;font-weight:600;font-size:1rem;
+  color:var(--text-secondary);transition:all 0.15s;margin-bottom:4px;
+}
+.mobile-drawer .mob-link:hover,.mobile-drawer .mob-link.active{color:var(--accent);background:rgba(108,71,255,0.08);}
+
+/* Theme Toggle */
+.theme-toggle{display:inline-flex;align-items:center;gap:7px;cursor:pointer;user-select:none;}
+.theme-toggle-track{
+  width:44px;height:24px;border-radius:99px;
+  background:linear-gradient(135deg,#1db954,#3b5998);border:1px solid var(--border);
+  position:relative;transition:background 0.3s,border 0.3s;flex-shrink:0;
+}
+.theme-toggle-track.on{background:linear-gradient(135deg,#8a2be2,#ff007f);border-color:transparent;}
+.theme-toggle-thumb{
+  position:absolute;top:3px;left:3px;width:16px;height:16px;
+  border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,0.3);
+  transition:transform 0.28s var(--ease-spring);
+  display:flex;align-items:center;justify-content:center;font-size:9px;
+}
+.theme-toggle-track.on .theme-toggle-thumb{transform:translateX(20px);}
+.theme-label{font-size:0.8rem;font-weight:600;color:var(--text-secondary);transition:color 0.3s;}
+
+/* ══════════════════════════════════════════════
+   HERO
+══════════════════════════════════════════════ */
+.hero{
+  position:relative;overflow:hidden;
+  padding:5.5rem 0 4.5rem;min-height:88vh;display:flex;align-items:center;
+}
+/* Animated orbs */
+.orb{position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none;z-index:0;}
+.orb1{width:600px;height:600px;top:-200px;left:-100px;background:rgba(108,71,255,0.18);animation:orb1 12s ease-in-out infinite;}
+.orb2{width:500px;height:500px;top:100px;right:-150px;background:rgba(255,71,133,0.12);animation:orb2 15s ease-in-out infinite;}
+.orb3{width:400px;height:400px;bottom:-100px;left:40%;background:rgba(0,212,170,0.08);animation:orb1 18s ease-in-out infinite reverse;}
+.hero__container{position:relative;z-index:1;}
+.hero__inner{display:grid;grid-template-columns:1fr 380px;gap:4rem;align-items:center;}
+.hero__eyebrow{font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;color:var(--accent);animation:fadeUp 0.6s both 0.1s;}
+.hero__title{margin-top:1rem;animation:fadeUp 0.7s both 0.2s;}
+.hero__sub{color:var(--text-secondary);font-size:1.1rem;margin-top:1.25rem;max-width:480px;line-height:1.75;animation:fadeUp 0.7s both 0.3s;}
+.hero__cta{display:flex;gap:1rem;flex-wrap:wrap;margin-top:2.25rem;animation:fadeUp 0.7s both 0.4s;}
+.hero__stats{display:flex;gap:2.5rem;margin-top:2.75rem;animation:fadeUp 0.7s both 0.5s;}
+.stat-val{font-family:'Plus Jakarta Sans',sans-serif;font-size:1.6rem;font-weight:900;}
+.stat-lbl{font-size:0.74rem;font-weight:500;color:var(--text-muted);margin-top:1px;}
+
+/* Disc animation */
+.hero__disc-wrap{animation:fadeIn 1s both 0.4s;}
+.disc{
+  width:100%;height:100%;border-radius:50%;
+  background:conic-gradient(from 0deg,#1a1a2e 0deg,#252545 90deg,#1a2040 180deg,#1a1a2e 360deg);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 24px 64px rgba(0,0,0,0.6),0 0 0 1px rgba(255,255,255,0.06),0 0 80px rgba(108,71,255,0.2);
+  animation:spin 9s linear infinite;position:relative;overflow:hidden;
+}
+.disc.paused{animation-play-state:paused;}
+.disc::before{content:'';position:absolute;inset:0;background:conic-gradient(from 0deg,transparent 0%,rgba(108,71,255,0.35) 20%,transparent 40%,rgba(255,71,133,0.2) 60%,transparent 80%,rgba(0,212,170,0.1) 90%,transparent 100%);}
+.disc::after{content:'';position:absolute;inset:15%;border-radius:50%;background:repeating-conic-gradient(rgba(255,255,255,0.03) 0deg 10deg, transparent 10deg 20deg);}
+.disc__ring{position:absolute;inset:8px;border-radius:50%;border:1px solid rgba(255,255,255,0.07);}
+.disc__hole{width:56px;height:56px;border-radius:50%;background:var(--bg-base);z-index:3;position:relative;border:3px solid rgba(255,255,255,0.12);}
+.disc-wrap{position:relative;width:300px;height:300px;margin:0 auto;animation:float 6s ease-in-out infinite;}
+.disc-glow{position:absolute;inset:-30px;border-radius:50%;background:radial-gradient(circle,rgba(108,71,255,0.25),transparent 70%);animation:pulse 3s ease-in-out infinite;}
+
+/* ══════════════════════════════════════════════
+   BUTTONS
+══════════════════════════════════════════════ */
+.btn{
+  display:inline-flex;align-items:center;gap:0.5rem;
+  padding:0.65rem 1.4rem;border-radius:99px;font-weight:600;font-size:0.88rem;
+  border:1.5px solid transparent;cursor:pointer;transition:all 0.18s var(--ease-spring);
+  white-space:nowrap;position:relative;overflow:hidden;
+}
+.btn::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,0.12);opacity:0;transition:opacity 0.2s;}
+.btn:active::after{opacity:1;}
+.btn-primary{
+  background:linear-gradient(135deg,#1db954,#1ed760);color:#0d1411;font-weight:700;
+  box-shadow:0 4px 20px rgba(29,185,84,0.45);
+}
+.btn-primary:hover{transform:translateY(-2px) scale(1.02);box-shadow:0 8px 28px rgba(30,215,96,0.6);}
+.btn-primary:active{transform:scale(0.98);}
+.btn-secondary{background:var(--glass2);color:var(--text-primary);border-color:var(--border);backdrop-filter:blur(8px);}
+.btn-secondary:hover{background:var(--bg-elevated);border-color:var(--accent);transform:translateY(-1px);}
+.btn-ghost{background:transparent;color:var(--text-secondary);border-color:transparent;}
+.btn-ghost:hover{color:var(--accent);background:rgba(29,185,84,0.12);}
+.btn-sm{padding:0.38rem 0.9rem;font-size:0.8rem;}
+.btn-lg{padding:0.85rem 2rem;font-size:1rem;}
+.btn-icon{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--glass);border:1px solid var(--border);transition:all 0.15s;color:var(--text-secondary);}
+.btn-icon:hover{background:var(--bg-elevated);color:var(--text-primary);transform:scale(1.08);}
+.btn-fav{padding:5px;border-radius:6px;color:var(--text-muted);transition:all 0.15s;}
+.btn-fav:hover{color:var(--accent2);transform:scale(1.15);}
+.btn-fav.active{color:var(--accent2);}
+.btn-fav.active svg{fill:var(--accent2);}
+.btn-play{
+  width:48px;height:48px;border-radius:50%;
+  background:linear-gradient(135deg,#1db954,#1ed760);color:#0d1411;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 18px rgba(29,185,84,0.5);transition:all 0.2s var(--ease-spring);flex-shrink:0;
+}
+.btn-play:hover{transform:scale(1.1);box-shadow:0 8px 28px rgba(108,71,255,0.6);}
+.btn-follow{
+  padding:0.33rem 1rem;border-radius:99px;
+  border:1.5px solid var(--accent);color:var(--accent);
+  font-size:0.78rem;font-weight:700;transition:all 0.18s var(--ease-spring);
+}
+.btn-follow:hover{background:var(--accent);color:#fff;transform:scale(1.05);}
+.btn-follow.following{background:var(--accent);color:#fff;}
+
+/* ══════════════════════════════════════════════
+   CARDS
+══════════════════════════════════════════════ */
+/* Song Card */
+.song-card{
+  border-radius:16px;overflow:hidden;cursor:pointer;
+  background:var(--bg-card);border:1px solid var(--border-s);
+  transition:transform 0.25s var(--ease-out),box-shadow 0.25s,border-color 0.2s;
+  padding:0.75rem;
+}
+.song-card:hover{transform:translateY(-5px);box-shadow:var(--shadow-md);border-color:var(--border);}
+.song-card:active{transform:translateY(-2px) scale(0.98);}
+.song-card__cover{position:relative;aspect-ratio:1;border-radius:12px;overflow:hidden;margin-bottom:0.75rem;}
+.song-card__cover img{width:100%;height:100%;transition:transform 0.45s var(--ease-out);}
+.song-card:hover .song-card__cover img{transform:scale(1.07);}
+.song-card__overlay{position:absolute;inset:0;background:rgba(0,0,0,0.42);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 0.22s;}
+.song-card:hover .song-card__overlay{opacity:1;}
+.song-card__title{font-weight:600;font-size:0.88rem;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.song-card__artist{font-size:0.76rem;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+/* Song Row */
+.song-row{
+  display:grid;align-items:center;gap:0.85rem;
+  padding:0.6rem 0.75rem;border-radius:12px;cursor:pointer;
+  transition:background 0.15s;grid-template-columns:32px 48px 1fr auto auto;
+  border:1px solid transparent;
+}
+.song-row:hover{background:var(--glass);border-color:var(--border-s);}
+.song-row:active{transform:scale(0.99);}
+.song-row__cover{width:44px;height:44px;border-radius:8px;object-fit:cover;flex-shrink:0;}
+.song-row__title{font-weight:600;font-size:0.88rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.song-row__artist{font-size:0.76rem;color:var(--text-muted);}
+.song-row__dur{font-size:0.76rem;color:var(--text-muted);font-variant-numeric:tabular-nums;}
+.song-row__actions{display:flex;gap:5px;align-items:center;opacity:0;transition:opacity 0.2s;}
+.song-row:hover .song-row__actions{opacity:1;}
+.rank{font-weight:800;font-size:1rem;text-align:center;color:var(--text-muted);}
+
+/* Artist Card */
+.artist-card{
+  display:flex;flex-direction:column;align-items:center;gap:0.6rem;
+  padding:1.5rem 1rem;border-radius:18px;text-align:center;
+  background:var(--bg-card);border:1px solid var(--border-s);
+  cursor:pointer;transition:transform 0.25s var(--ease-out),box-shadow 0.25s,border-color 0.2s;
+  min-width:160px;
+}
+.artist-card:hover{transform:translateY(-5px);box-shadow:var(--shadow-md);border-color:var(--border);}
+.artist-card__avatar{width:88px;height:88px;border-radius:50%;object-fit:cover;border:3px solid var(--border);transition:border-color 0.2s,transform 0.3s var(--ease-spring);}
+.artist-card:hover .artist-card__avatar{border-color:var(--accent);transform:scale(1.05);}
+.artist-card__name{font-weight:700;font-size:0.9rem;}
+.artist-card__followers{font-size:0.73rem;color:var(--text-muted);}
+
+/* Album Card */
+.album-card{
+  border-radius:16px;overflow:hidden;cursor:pointer;
+  background:var(--bg-card);border:1px solid var(--border-s);
+  transition:transform 0.25s var(--ease-out),box-shadow 0.25s;
+  padding:0.75rem;min-width:180px;
+}
+.album-card:hover{transform:translateY(-5px);box-shadow:var(--shadow-md);}
+.album-card__cover{position:relative;aspect-ratio:1;border-radius:12px;overflow:hidden;margin-bottom:0.75rem;}
+.album-card__cover img{width:100%;height:100%;transition:transform 0.45s var(--ease-out);}
+.album-card:hover .album-card__cover img{transform:scale(1.07);}
+.album-card__title{font-weight:600;font-size:0.88rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.album-card__artist{font-size:0.76rem;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+/* Category Card & Genre Cards */
+.cat-card{
+  position:relative;overflow:hidden;border-radius:16px;min-height:120px;height:120px;
+  cursor:pointer;transition:transform 0.25s var(--ease-out),box-shadow 0.25s;
+  background:linear-gradient(135deg,var(--bg-card),var(--bg-elevated));
+  border:1px solid var(--border-s);
+}
+.cat-card:hover{transform:translateY(-4px) scale(1.02);box-shadow:var(--shadow-md);}
+.cat-card:active{transform:scale(0.98);}
+.cat-card__bg{position:absolute;inset:0;background-size:cover;background-position:center;transition:transform 0.5s var(--ease-out);}
+.cat-card:hover .cat-card__bg{transform:scale(1.08);}
+.cat-card__overlay{position:absolute;inset:0;z-index:1;background:linear-gradient(135deg,rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.3) 100%);}
+.cat-card__label{position:absolute;bottom:14px;left:14px;right:14px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.05rem;color:#ffffff;text-shadow:0 2px 8px rgba(0,0,0,0.8);z-index:2;}
+
+/* Badge */
+.badge{display:inline-flex;align-items:center;padding:2px 9px;border-radius:99px;font-size:0.7rem;font-weight:700;background:rgba(108,71,255,0.15);color:var(--accent);}
+
+/* Scroll Row */
+.scroll-row{display:flex;gap:1rem;overflow-x:auto;padding-bottom:0.5rem;scrollbar-width:none;}
+.scroll-row::-webkit-scrollbar{display:none;}
+
+/* Grid */
+.songs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:1.25rem;}
+.genre-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:1rem;}
+.artists-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:1rem;}
+
+/* ══════════════════════════════════════════════
+   MUSIC PLAYER
+══════════════════════════════════════════════ */
+.player{
+  position:fixed;bottom:0;left:0;right:0;z-index:200;
+  background:var(--player);border-top:1px solid var(--border);
+  box-shadow:0 -6px 24px rgba(0,0,0,0.12);
+  backdrop-filter:blur(28px) saturate(180%);-webkit-backdrop-filter:blur(28px) saturate(180%);
+  height:80px;display:flex;align-items:center;padding:0 1.5rem;gap:1.5rem;
+  transition:var(--transition-theme);
+}
+.player__song{display:flex;align-items:center;gap:0.85rem;min-width:0;flex:0 0 280px;}
+.player__cover{width:50px;height:50px;border-radius:10px;object-fit:cover;flex-shrink:0;box-shadow:var(--shadow-sm);transition:all 0.3s var(--ease-spring);}
+.player__cover.playing{animation:pulse 2.4s infinite;}
+.player__info{min-width:0;}
+.player__title{font-weight:600;font-size:0.88rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.player__artist{font-size:0.74rem;color:var(--text-muted);}
+.player__controls{flex:1;display:flex;flex-direction:column;align-items:center;gap:0.5rem;max-width:600px;margin:0 auto;}
+.player__btns{display:flex;align-items:center;gap:1rem;}
+.ctrl{color:var(--text-muted);transition:all 0.15s;padding:4px;border-radius:6px;}
+.ctrl:hover{color:var(--text-primary);transform:scale(1.1);}
+.ctrl.active{color:var(--accent);}
+.player__progress{display:flex;align-items:center;gap:0.75rem;width:100%;}
+.prog-bar{
+  flex:1;height:4px;border-radius:99px;
+  background:var(--glass2);cursor:pointer;position:relative;overflow:hidden;
+}
+.prog-bar::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,0.06);transform:translateX(-100%);animation:shimmer 2s ease infinite;}
+.prog-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width 0.1s linear;position:relative;}
+.prog-fill::after{content:'';position:absolute;right:-5px;top:50%;transform:translateY(-50%);width:10px;height:10px;border-radius:50%;background:#fff;box-shadow:0 0 0 2px var(--accent);opacity:0;transition:opacity 0.2s;}
+.prog-bar:hover .prog-fill::after{opacity:1;}
+.time{font-size:0.7rem;color:var(--text-muted);font-variant-numeric:tabular-nums;white-space:nowrap;}
+.player__extra{display:flex;align-items:center;gap:0.75rem;flex:0 0 200px;justify-content:flex-end;}
+.vol-bar{width:80px;height:4px;border-radius:99px;background:var(--glass2);cursor:pointer;overflow:hidden;}
+.vol-fill{width:70%;height:100%;border-radius:99px;background:var(--text-secondary);}
+
+/* Music bars animation */
+.music-bars{display:flex;align-items:flex-end;gap:2px;height:20px;}
+.music-bars span{width:3px;border-radius:2px;background:var(--accent);animation:bars 0.8s ease-in-out infinite;}
+.music-bars span:nth-child(2){animation-delay:0.1s;}
+.music-bars span:nth-child(3){animation-delay:0.2s;}
+.music-bars.paused span{animation-play-state:paused;}
+
+/* ══════════════════════════════════════════════
+   TOAST
+══════════════════════════════════════════════ */
+#toasts{position:fixed;top:78px;right:1.25rem;z-index:500;display:flex;flex-direction:column;gap:8px;}
+.toast{
+  background:var(--bg-elevated);border:1px solid var(--border);border-radius:14px;
+  padding:0.85rem 1.1rem;font-size:0.84rem;font-weight:500;
+  box-shadow:var(--shadow-md);display:flex;align-items:center;gap:10px;min-width:240px;
+  animation:toastIn 0.35s var(--ease-spring) both;
+}
+.toast.out{animation:toastOut 0.3s ease forwards;}
+
+/* ══════════════════════════════════════════════
+   FOOTER
+══════════════════════════════════════════════ */
+.footer{background:var(--bg-elevated);border-top:1px solid var(--border);padding:3.5rem 0 2rem;transition:var(--transition-theme);}
+.footer__grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;margin-bottom:3rem;}
+.footer__brand p{font-size:0.83rem;color:var(--text-muted);margin-top:0.85rem;max-width:260px;line-height:1.75;}
+.footer__col h4{font-weight:700;font-size:0.82rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:1rem;color:var(--text-secondary);}
+.footer__col ul{display:flex;flex-direction:column;gap:0.65rem;}
+.footer__col a{font-size:0.85rem;color:var(--text-muted);transition:color 0.15s;}
+.footer__col a:hover{color:var(--accent);}
+.footer__bottom{border-top:1px solid var(--border-s);padding-top:1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;}
+.footer__copy{font-size:0.78rem;color:var(--text-muted);}
+
+/* ══════════════════════════════════════════════
+   TWO-COLUMN SECTION
+══════════════════════════════════════════════ */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:4rem;}
+
+/* ══════════════════════════════════════════════
+   MOBILE RESPONSIVE
+══════════════════════════════════════════════ */
+@media(max-width:1024px){
+  .hero__inner{grid-template-columns:1fr 300px;gap:2.5rem;}
+  .two-col{gap:2.5rem;}
+  .footer__grid{grid-template-columns:1fr 1fr;gap:2rem;}
+}
+@media(max-width:768px){
+  html{font-size:14px;}
+  /* Navbar mobile */
+  .navbar__nav{display:none;}
+  .nav-search{display:none;}
+  .hamburger{display:flex;}
+
+  /* Hero mobile */
+  .hero{padding:3rem 0 3rem;min-height:auto;}
+  .hero__inner{grid-template-columns:1fr;text-align:center;gap:2rem;}
+  .hero__disc-wrap{display:none;}
+  .disc-wrap{width:220px;height:220px;}
+  .hero__sub{margin:1rem auto 0;}
+  .hero__cta{justify-content:center;}
+  .hero__stats{justify-content:center;gap:2rem;}
+
+  /* Sections */
+  .section{padding:2.5rem 0;}
+  .section-sm{padding:1.75rem 0;}
+  .section-header{margin-bottom:1.25rem;}
+
+  /* Grids & Cards mobile */
+  .scroll-row{gap:0.85rem;padding-bottom:0.75rem;}
+  .scroll-row .song-card{min-width:145px;width:145px;flex-shrink:0;padding:0.6rem;}
+  .scroll-row .artist-card{min-width:135px;width:135px;flex-shrink:0;padding:1rem 0.6rem;}
+  .scroll-row .album-card{min-width:145px;width:145px;flex-shrink:0;padding:0.6rem;}
+  .song-card__title{font-size:0.85rem;}
+  .song-card__artist{font-size:0.75rem;}
+  .songs-grid{grid-template-columns:repeat(2,1fr);gap:0.85rem;}
+  .genre-grid{grid-template-columns:repeat(2,1fr);gap:0.75rem;}
+  .artists-grid{grid-template-columns:repeat(2,1fr);gap:0.75rem;}
+  .two-col{grid-template-columns:1fr;}
+
+  /* Song Row mobile */
+  .song-row{grid-template-columns:28px 40px 1fr auto;gap:0.6rem;padding:0.5rem;}
+  .song-row__dur,.song-row__actions{display:none;}
+
+  /* Footer mobile */
+  .footer__grid{grid-template-columns:1fr;gap:2rem;}
+  .footer__brand{max-width:100%;}
+
+  /* Player mobile position offset above bottom nav */
+  .player{padding:0 1rem;gap:0.75rem;height:66px;position:fixed;bottom:64px;border-radius:14px 14px 0 0;}
+  .player__song{flex:1;flex-basis:0;}
+  .player__controls{display:none;}
+  .player__extra{display:none;}
+  .player__mobile-controls{display:flex;align-items:center;gap:0.5rem;flex-shrink:0;}
+  
+  /* Mobile Mini Player Progress Line */
+  .mob-prog-bar{
+    position:absolute;top:0;left:0;right:0;height:3px;
+    background:rgba(255,255,255,0.1);cursor:pointer;z-index:10;
+  }
+  .mob-prog-fill{
+    height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));
+    width:0%;transition:width 0.1s linear;
+  }
+
+  /* Mobile Bottom Navigation Bar (Spotify / Daily UI style) */
+  .mob-bottom-nav{
+    display:flex;position:fixed;bottom:0;left:0;right:0;z-index:250;
+    height:64px;background:var(--bg-elevated);
+    border-top:1px solid var(--border);
+    backdrop-filter:blur(20px) saturate(180%);
+    -webkit-backdrop-filter:blur(20px) saturate(180%);
+    align-items:center;justify-content:space-around;
+    padding:0 0.25rem;
+  }
+  .mob-nav-item{
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:3px;color:var(--text-muted);font-size:0.68rem;font-weight:600;
+    flex:1;height:100%;padding:4px 0;transition:all 0.18s ease;
+    text-decoration:none;
+  }
+  .mob-nav-item svg{transition:transform 0.2s var(--ease-spring);}
+  .mob-nav-item:hover,.mob-nav-item.active{
+    color:var(--accent);
+  }
+  .mob-nav-item.active svg{
+    transform:translateY(-2px) scale(1.1);
+    stroke:var(--accent);
+  }
+  body{padding-bottom:130px;}
+}
+@media(min-width:769px){
+  .mob-prog-bar,.mob-bottom-nav{display:none !important;}
+}
+@media(max-width:480px){
+  .container{padding:0 1rem;}
+  .hero .display-1{font-size:2rem;}
+  .songs-grid{grid-template-columns:repeat(2,1fr);gap:0.6rem;}
+  .genre-grid{grid-template-columns:repeat(2,1fr);}
+}
+
+/* Mobile drawer show */
+@media(max-width:768px){
+  .mobile-drawer{display:block;}
+}
+
+/* Hidden mobile controls placeholder */
+.player__mobile-controls{display:none;}
+@media(max-width:768px){
+  .player__mobile-controls{display:flex;}
+}
+</style>
+</head>
+<body>
+
+<!-- TOASTS -->
+<div id="toasts" role="region" aria-live="polite"></div>
+
+<!-- ══ NAVBAR ════════════════════════════════════════ -->
+<nav class="navbar" id="navbar" role="navigation" aria-label="Main navigation">
+  <div class="container">
+    <div class="navbar__inner">
+      <!-- Logo -->
+      <a href="#home" class="navbar__logo" aria-label="BeatWave Home">
+        <div class="navbar__logo-icon" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round">
+            <path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>
+          </svg>
+        </div>
+        Beat<span class="text-gradient">Wave</span>
+      </a>
+
+      <!-- Desktop Nav -->
+      <div class="navbar__nav" role="list">
+        <a href="#home" class="navbar__link active" onclick="switchTab('home')">Home</a>
+        <a href="#trending" class="navbar__link" onclick="switchTab('trending')">Trending</a>
+        <a href="#latest" class="navbar__link" onclick="switchTab('latest')">New Releases</a>
+        <a href="#artists" class="navbar__link" onclick="switchTab('artists')">Artists</a>
+        <a href="#albums" class="navbar__link" onclick="switchTab('albums')">Albums</a>
+        <a href="#genres" class="navbar__link" onclick="switchTab('genres')">Genres</a>
+      </div>
+
+      <!-- Right -->
+      <div class="navbar__right">
+        <!-- Search -->
+        <div class="nav-search" role="search">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+          <input type="search" id="search-input" placeholder="Search music..." aria-label="Search music">
+        </div>
+
+        <!-- Day/Night Toggle -->
+        <button class="theme-toggle" id="theme-btn" onclick="toggleTheme()" aria-label="Toggle light dark mode" title="Switch theme">
+          <span class="theme-label" id="theme-icon">🌙</span>
+          <div class="theme-toggle-track" id="theme-track">
+            <div class="theme-toggle-thumb" id="theme-thumb">🌙</div>
+          </div>
+        </button>
+
+        <!-- Sign In -->
+        <button class="btn btn-primary btn-sm" onclick="toast('Sign up coming soon! 🚀','info')">Sign In</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile Drawer -->
+<div class="mobile-drawer" id="mobile-drawer" aria-hidden="true">
+  <a class="mob-link active" href="#home" onclick="closeMenu();setActive(this)">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    Home
+  </a>
+  <a class="mob-link" href="#trending" onclick="closeMenu()">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+    Trending
+  </a>
+  <a class="mob-link" href="#latest" onclick="closeMenu()">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+    New Releases
+  </a>
+  <a class="mob-link" href="#artists" onclick="closeMenu()">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    Artists
+  </a>
+  <a class="mob-link" href="#albums" onclick="closeMenu()">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><circle cx="12" cy="12" r="3"/></svg>
+    Albums
+  </a>
+  <a class="mob-link" href="#genres" onclick="closeMenu()">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+    Genres
+  </a>
+  <div style="margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--border);">
+    <button class="theme-toggle" onclick="toggleTheme()" style="gap:12px;">
+      <span id="mob-theme-icon" style="font-size:1.1rem;">🌙</span>
+      <span style="font-weight:600;color:var(--text-secondary);" id="mob-theme-label">Dark Mode</span>
+    </button>
+  </div>
+  <button class="btn btn-primary" style="margin-top:1.25rem;width:100%;justify-content:center;" onclick="toast('Sign up coming soon! 🚀','info');closeMenu()">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+    Create Free Account
+  </button>
+</div>
+
+<!-- ══ TAB 1: HOME PAGE ════════════════════════════ -->
+<div class="tab-page active" id="tab-home">
+  <!-- HERO -->
+  <section class="hero">
+    <div class="orb orb1" aria-hidden="true"></div>
+    <div class="orb orb2" aria-hidden="true"></div>
+    <div class="orb orb3" aria-hidden="true"></div>
+    <div class="container hero__container" style="width:100%;">
+      <div class="hero__inner">
+        <div>
+          <div class="hero__eyebrow">🎵 Your Music Universe</div>
+          <h1 class="display-1 hero__title">
+            Discover Your<br>
+            <span class="text-gradient">Next Favorite</span><br>
+            Song.
+          </h1>
+          <p class="hero__sub">
+            Stream millions of songs, follow your favourite artists, and download music for offline listening — all for free.
+          </p>
+          <div class="hero__cta">
+            <button class="btn btn-primary btn-lg" onclick="switchTab('trending')">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="5,3 19,12 5,21"/></svg>
+              Start Listening Free
+            </button>
+            <button class="btn btn-secondary btn-lg" onclick="switchTab('genres')">
+              Explore Genres
+            </button>
+          </div>
+          <div class="hero__stats">
+            <div>
+              <div class="stat-val text-gradient">5M+</div>
+              <div class="stat-lbl">Songs</div>
+            </div>
+            <div>
+              <div class="stat-val text-gradient">120K+</div>
+              <div class="stat-lbl">Artists</div>
+            </div>
+            <div>
+              <div class="stat-val text-gradient">2M+</div>
+              <div class="stat-lbl">Listeners</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero__disc-wrap">
+          <div class="disc-wrap">
+            <div class="disc-glow" aria-hidden="true"></div>
+            <div class="disc paused" aria-hidden="true">
+              <div class="disc__ring"></div>
+              <div class="disc__hole"></div>
+            </div>
+          </div>
+          <div style="text-align:center;margin-top:1.25rem;">
+            <div style="display:inline-flex;align-items:center;gap:0.5rem;background:var(--glass);border:1px solid var(--border);border-radius:99px;padding:0.5rem 1rem;">
+              <div class="music-bars paused" id="hero-bars">
+                <span></span><span></span><span></span>
+              </div>
+              <span id="hero-status-lbl" style="font-size:0.8rem;font-weight:600;color:var(--text-secondary);">Ready to Play</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOME SECTION 1: TRENDING HIGHLIGHTS -->
+  <section class="section" style="background:var(--bg-elevated);">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <div class="eyebrow" style="margin-bottom:0.4rem;">🔥 Chart Toppers</div>
+          <h2 class="display-2">Trending Right Now</h2>
+        </div>
+        <button onclick="switchTab('trending')" class="btn btn-ghost btn-sm">See all →</button>
+      </div>
+      <div id="home-trending-list" class="stagger" role="list"></div>
+    </div>
+  </section>
+
+  <!-- HOME SECTION 2: NEW RELEASES -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <div class="eyebrow" style="margin-bottom:0.4rem;">✨ Fresh Drops</div>
+          <h2 class="display-2">New Releases</h2>
+        </div>
+        <button onclick="switchTab('latest')" class="btn btn-ghost btn-sm">View all →</button>
+      </div>
+      <div class="scroll-row stagger" id="home-latest-row" role="list"></div>
+    </div>
+  </section>
+
+  <!-- HOME SECTION 3: FEATURED ARTISTS -->
+  <section class="section" style="background:var(--bg-elevated);">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <div class="eyebrow" style="margin-bottom:0.4rem;">🎤 Top Creators</div>
+          <h2 class="display-2">Featured Artists</h2>
+        </div>
+        <button onclick="switchTab('artists')" class="btn btn-ghost btn-sm">See all →</button>
+      </div>
+      <div class="scroll-row stagger" id="home-artists-row" role="list"></div>
+    </div>
+  </section>
+
+  <!-- HOME SECTION 4: POPULAR ALBUMS -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <div class="eyebrow" style="margin-bottom:0.4rem;">💿 Catalog</div>
+          <h2 class="display-2">Popular Albums</h2>
+        </div>
+        <button onclick="switchTab('albums')" class="btn btn-ghost btn-sm">View all →</button>
+      </div>
+      <div class="scroll-row stagger" id="home-albums-row" role="list"></div>
+    </div>
+  </section>
+
+  <!-- HOME SECTION 5: QUICK GENRES -->
+  <section class="section" style="background:var(--bg-elevated);">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <div class="eyebrow" style="margin-bottom:0.4rem;">🗂️ Browse</div>
+          <h2 class="display-2">Explore Genres</h2>
+        </div>
+        <button onclick="switchTab('genres')" class="btn btn-ghost btn-sm">All genres →</button>
+      </div>
+      <div class="genre-grid stagger" id="home-genres-grid"></div>
+    </div>
+  </section>
+</div>
+
+<!-- ══ TAB 2: TRENDING PAGE ════════════════════════ -->
+<div class="tab-page" id="tab-trending">
+  <section class="section">
+    <div class="container">
+      <div class="section-header" style="margin-bottom:2.5rem;">
+        <div>
+          <div class="eyebrow" style="margin-bottom:0.4rem;">🔥 Top Charts</div>
+          <h2 class="display-1">Trending Songs</h2>
+          <p style="color:var(--text-secondary);margin-top:0.5rem;">The most streamed tracks across BeatWave this week.</p>
+        </div>
+      </div>
+      <div id="trending-list" class="stagger" role="list"></div>
+    </div>
+  </section>
+</div>
+
+<!-- ══ TAB 3: NEW RELEASES PAGE ════════════════════ -->
+<div class="tab-page" id="tab-latest">
+  <section class="section">
+    <div class="container">
+      <div class="section-header" style="margin-bottom:2.5rem;">
+        <div>
+          <div class="eyebrow" style="margin-bottom:0.4rem;">✨ Fresh Drops</div>
+          <h2 class="display-1">New Releases</h2>
+          <p style="color:var(--text-secondary);margin-top:0.5rem;">Stream brand new singles and EP releases updated daily.</p>
+        </div>
+      </div>
+      <div class="songs-grid stagger" id="latest-row"></div>
+    </div>
+  </section>
+</div>
+
+<!-- ══ TAB 4: ARTISTS PAGE ═════════════════════════ -->
+<div class="tab-page" id="tab-artists">
+  <section class="section">
+    <div class="container">
+      <div class="section-header" style="margin-bottom:2.5rem;">
+        <div>
+          <div class="eyebrow" style="margin-bottom:0.4rem;">🎤 Top Creators</div>
+          <h2 class="display-1">Featured Artists</h2>
+          <p style="color:var(--text-secondary);margin-top:0.5rem;">Discover trending music producers and artists to follow.</p>
+        </div>
+      </div>
+      <div class="artists-grid stagger" id="artists-row"></div>
+    </div>
+  </section>
+</div>
+
+<!-- ══ TAB 5: ALBUMS PAGE ══════════════════════════ -->
+<div class="tab-page" id="tab-albums">
+  <section class="section">
+    <div class="container">
+      <div class="section-header" style="margin-bottom:2.5rem;">
+        <div>
+          <div class="eyebrow" style="margin-bottom:0.4rem;">💿 Catalog</div>
+          <h2 class="display-1">Popular Albums</h2>
+          <p style="color:var(--text-secondary);margin-top:0.5rem;">Explore full albums and collections from featured artists.</p>
+        </div>
+      </div>
+      <div class="songs-grid stagger" id="albums-row"></div>
+    </div>
+  </section>
+</div>
+
+<!-- ══ TAB 6: GENRES PAGE ══════════════════════════ -->
+<div class="tab-page" id="tab-genres">
+  <section class="section">
+    <div class="container">
+      <div class="section-header" style="margin-bottom:2.5rem;">
+        <div>
+          <div class="eyebrow" style="margin-bottom:0.4rem;">🗂️ Categories</div>
+          <h2 class="display-1">Explore Genres</h2>
+          <p style="color:var(--text-secondary);margin-top:0.5rem;">Browse curated music channels by mood and genre.</p>
+        </div>
+      </div>
+      <div class="genre-grid stagger" id="genres-grid"></div>
+    </div>
+  </section>
+</div>
+
+<!-- ══ TAB 7: SEARCH PAGE (Spotify App Design) ══════════════════════════ -->
+<div class="tab-page" id="tab-search">
+  <section class="section" style="padding-top:1.5rem;">
+    <div class="container">
+      
+      <!-- Top Bar: Search Title -->
+      <div style="margin-bottom:1.25rem;">
+        <h1 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:1.75rem;font-weight:900;margin:0;">Search</h1>
+      </div>
+
+      <!-- Search Bar Input: What do you want to listen to? -->
+      <div style="position:relative;margin-bottom:1.75rem;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#222" stroke-width="2.5" style="position:absolute;left:16px;top:50%;transform:translateY(-50%);pointer-events:none;z-index:2;"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        <input type="search" id="mob-search-input" placeholder="What do you want to listen to?" 
+          oninput="filterSearch(this.value)"
+          style="width:100%;padding:1rem 1rem 1rem 3.2rem;border-radius:12px;background:#ffffff;border:none;color:#111118;font-size:1.05rem;font-weight:600;outline:none;box-shadow:0 4px 20px rgba(0,0,0,0.15);">
+      </div>
+
+      <!-- SEARCH RESULTS (Only shown when searching) -->
+      <div id="search-results-container" style="display:none;margin-bottom:2rem;">
+        <h3 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:1.1rem;font-weight:800;margin-bottom:1rem;">Search Results</h3>
+        <div id="search-results-list" class="stagger" role="list"></div>
+      </div>
+
+      <!-- DEFAULT SPOTIFY BROWSE LAYOUT (Shown when not actively typing search) -->
+      <div id="search-default-browse">
+        <!-- 1. Start Browsing Grid -->
+        <h3 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:1.15rem;font-weight:800;margin-bottom:1rem;">Start browsing</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.85rem;margin-bottom:2rem;">
+          <div class="spotify-tile" style="background:linear-gradient(135deg,#e91e63,#ff4081);" onclick="switchTab('trending')">
+            <span class="spotify-tile__title">Music</span>
+            <img class="spotify-tile__img" src="https://picsum.photos/seed/sb1/150/150" alt="Music">
+          </div>
+          <div class="spotify-tile" style="background:linear-gradient(135deg,#00897b,#00bfa5);" onclick="toast('Podcasts coming soon! 🎙️','info')">
+            <span class="spotify-tile__title">Podcasts</span>
+            <img class="spotify-tile__img" src="https://picsum.photos/seed/sb2/150/150" alt="Podcasts">
+          </div>
+          <div class="spotify-tile" style="background:linear-gradient(135deg,#7c4dff,#651fff);" onclick="toast('Live Events coming soon! 🎟️','info')">
+            <span class="spotify-tile__title">Live Events</span>
+            <img class="spotify-tile__img" src="https://picsum.photos/seed/sb3/150/150" alt="Live Events">
+          </div>
+          <div class="spotify-tile" style="background:linear-gradient(135deg,#1565c0,#1e88e5);" onclick="switchTab('genres')">
+            <span class="spotify-tile__title">Home of I-Pop</span>
+            <img class="spotify-tile__img" src="https://picsum.photos/seed/sb4/150/150" alt="I-Pop">
+          </div>
+        </div>
+
+        <!-- 2. Discover Something New (Horizontal Scroll Cards) -->
+        <h3 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:1.15rem;font-weight:800;margin-bottom:1rem;">Discover something new</h3>
+        <div class="scroll-row" style="margin-bottom:2rem;">
+          <div class="discover-card" onclick="switchTab('genres')">
+            <img src="https://picsum.photos/seed/disc1/300/400" alt="#hindi pop">
+            <div class="discover-card__overlay"></div>
+            <div class="discover-card__tag">#hindi pop</div>
+          </div>
+          <div class="discover-card" onclick="switchTab('genres')">
+            <img src="https://picsum.photos/seed/disc2/300/400" alt="#hindi lofi">
+            <div class="discover-card__overlay"></div>
+            <div class="discover-card__tag">#hindi lofi</div>
+          </div>
+          <div class="discover-card" onclick="switchTab('genres')">
+            <img src="https://picsum.photos/seed/disc3/300/400" alt="#sad">
+            <div class="discover-card__overlay"></div>
+            <div class="discover-card__tag">#sad</div>
+          </div>
+          <div class="discover-card" onclick="switchTab('genres')">
+            <img src="https://picsum.photos/seed/disc4/300/400" alt="#party">
+            <div class="discover-card__overlay"></div>
+            <div class="discover-card__tag">#party</div>
+          </div>
+        </div>
+
+        <!-- 3. Browse All (Grid of Color Cards like Spotify) -->
+        <h3 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:1.15rem;font-weight:800;margin-bottom:1rem;">Browse all</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.85rem;margin-bottom:2rem;">
+          <div class="spotify-tile" style="background:linear-gradient(135deg,#8e24aa,#ab47bc);" onclick="switchTab('latest')">
+            <span class="spotify-tile__title">Made For You</span>
+            <img class="spotify-tile__img" src="https://picsum.photos/seed/b1/150/150" alt="Made For You">
+          </div>
+          <div class="spotify-tile" style="background:linear-gradient(135deg,#00695c,#00897b);" onclick="switchTab('latest')">
+            <span class="spotify-tile__title">New Releases</span>
+            <img class="spotify-tile__img" src="https://picsum.photos/seed/b2/150/150" alt="New Releases">
+          </div>
+          <div class="spotify-tile" style="background:linear-gradient(135deg,#558b2f,#7cb342);" onclick="switchTab('genres')">
+            <span class="spotify-tile__title">Hindi</span>
+            <img class="spotify-tile__img" src="https://picsum.photos/seed/b3/150/150" alt="Hindi">
+          </div>
+          <div class="spotify-tile" style="background:linear-gradient(135deg,#0277bd,#039be5);" onclick="switchTab('genres')">
+            <span class="spotify-tile__title">Rain & Monsoon</span>
+            <img class="spotify-tile__img" src="https://picsum.photos/seed/b4/150/150" alt="Rain">
+          </div>
+          <div class="spotify-tile" style="background:linear-gradient(135deg,#d84315,#f4511e);" onclick="switchTab('genres')">
+            <span class="spotify-tile__title">Tamil</span>
+            <img class="spotify-tile__img" src="https://picsum.photos/seed/b5/150/150" alt="Tamil">
+          </div>
+          <div class="spotify-tile" style="background:linear-gradient(135deg,#424242,#616161);" onclick="switchTab('genres')">
+            <span class="spotify-tile__title">Charts</span>
+            <img class="spotify-tile__img" src="https://picsum.photos/seed/b6/150/150" alt="Charts">
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</div>
+
+<!-- ══ FOOTER ══════════════════════════════════════ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <a href="#" class="navbar__logo" style="font-size:1.2rem;">
+          <div class="navbar__logo-icon" style="width:30px;height:30px;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+          </div>
+          Beat<span class="text-gradient">Wave</span>
+        </a>
+        <p>Your premium music destination. Discover, stream, and download millions of songs from artists worldwide.</p>
+      </div>
+      <div class="footer__col">
+        <h4>Discover</h4>
+        <ul>
+          <li><a href="#trending">Trending</a></li>
+          <li><a href="#latest">New Releases</a></li>
+          <li><a href="#genres">Genres</a></li>
+          <li><a href="#artists">Artists</a></li>
+        </ul>
+      </div>
+      <div class="footer__col">
+        <h4>Account</h4>
+        <ul>
+          <li><a href="#" onclick="toast('Coming soon! 🚀','info')">Sign Up</a></li>
+          <li><a href="#" onclick="toast('Coming soon! 🚀','info')">Login</a></li>
+          <li><a href="#" onclick="toast('Coming soon! 🚀','info')">Dashboard</a></li>
+          <li><a href="#" onclick="toast('Coming soon! 🚀','info')">Upload Music</a></li>
+        </ul>
+      </div>
+      <div class="footer__col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Contact</a></li>
+          <li><a href="#">Privacy</a></li>
+          <li><a href="#">Terms</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <p class="footer__copy">© 2024 BeatWave. All rights reserved.</p>
+      <p class="footer__copy">Made with ❤️ for music lovers</p>
+    </div>
+  </div>
+</footer>
+
+<!-- ══ MUSIC PLAYER ════════════════════════════════ -->
+<div class="player" id="player" role="region" aria-label="Music Player">
+  <!-- Mobile Progress Bar Line (Top of Mini Player) -->
+  <div class="mob-prog-bar" id="mob-prog-bar" onclick="seekTo(event)">
+    <div class="mob-prog-fill" id="mob-prog-fill" style="width:0%"></div>
+  </div>
+
+  <div class="player__song">
+    <img class="player__cover" id="p-cover" src="https://picsum.photos/seed/default/80/80" alt="Now playing cover">
+    <div class="player__info">
+      <div class="player__title" id="p-title">Select a song</div>
+      <div class="player__artist" id="p-artist">—</div>
+    </div>
+    <button class="btn-fav" id="p-fav" aria-label="Add to favorites" onclick="toggleFav(this)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+    </button>
+  </div>
+
+  <div class="player__controls">
+    <div class="player__btns">
+      <button class="ctrl" id="btn-shuffle" aria-label="Shuffle" onclick="this.classList.toggle('active');toast('Shuffle '+(this.classList.contains('active')?'on':'off'),'info')">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+      </button>
+      <button class="ctrl" id="btn-prev" aria-label="Previous" onclick="prevSong()">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="19 20 9 12 19 4 19 20"/><line x1="5" y1="19" x2="5" y2="5"/></svg>
+      </button>
+      <button class="btn-play" id="btn-play" aria-label="Play/Pause" onclick="togglePlay()">
+        <svg id="play-icon" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+      </button>
+      <button class="ctrl" id="btn-next" aria-label="Next" onclick="nextSong()">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
+      </button>
+      <button class="ctrl" id="btn-repeat" aria-label="Repeat" onclick="this.classList.toggle('active');toast('Repeat '+(this.classList.contains('active')?'on':'off'),'info')">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 014-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
+      </button>
+    </div>
+    <div class="player__progress">
+      <span class="time" id="cur-time">0:00</span>
+      <div class="prog-bar" id="prog-bar" onclick="seekTo(event)" role="slider" aria-label="Song progress" aria-valuemin="0" aria-valuemax="100">
+        <div class="prog-fill" id="prog-fill" style="width:0%"></div>
+      </div>
+      <span class="time" id="tot-time">0:00</span>
+    </div>
+  </div>
+
+  <div class="player__extra">
+    <div class="music-bars paused" id="player-bars" aria-hidden="true">
+      <span></span><span></span><span></span>
+    </div>
+    <button class="ctrl" aria-label="Volume">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07"/></svg>
+    </button>
+    <div class="vol-bar"><div class="vol-fill"></div></div>
+    <button class="ctrl" onclick="toast('Downloading...','success')" aria-label="Download">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    </button>
+  </div>
+
+  <!-- Mobile simplified controls -->
+  <div class="player__mobile-controls">
+    <button class="btn-play" style="width:42px;height:42px;" onclick="togglePlay()" aria-label="Play/Pause">
+      <svg id="mob-play-icon" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+    </button>
+    <button class="ctrl" onclick="nextSong()" aria-label="Next">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- ══ MOBILE BOTTOM NAVIGATION BAR (Spotify Standard) ════════════════ -->
+<nav class="mob-bottom-nav" id="mob-bottom-nav" aria-label="Mobile Navigation">
+  <a href="#home" class="mob-nav-item active" onclick="switchTab('home')">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <span>Home</span>
+  </a>
+  <a href="#search" class="mob-nav-item" onclick="switchTab('search')">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+    <span>Search</span>
+  </a>
+  <a href="#trending" class="mob-nav-item" onclick="switchTab('trending')">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+    <span>Trending</span>
+  </a>
+  <a href="#artists" class="mob-nav-item" onclick="switchTab('artists')">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    <span>Artists</span>
+  </a>
+  <a href="#genres" class="mob-nav-item" onclick="switchTab('genres')">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+    <span>Genres</span>
+  </a>
+</nav>
+
+<script>
+/* ═══════════════════════════════════════════════════
+   DATA
+═══════════════════════════════════════════════════ */
+const songs=[
+  {id:1,title:'Crystal Clear',    artist:'Ava Monroe',  plays:'2.2M',dl:'420K',cover:'https://picsum.photos/seed/n1/300/300',dur:'3:33',sec:213,pubDate:'2026-07-24',dateLabel:'Today'},
+  {id:2,title:'Starfall',         artist:'Zion Cole',   plays:'2.0M',dl:'390K',cover:'https://picsum.photos/seed/n2/300/300',dur:'4:05',sec:245,pubDate:'2026-07-24',dateLabel:'Today'},
+  {id:3,title:'Purple Rain',      artist:'Kylie Dawn',  plays:'1.9M',dl:'360K',cover:'https://picsum.photos/seed/n3/300/300',dur:'3:48',sec:228,pubDate:'2026-07-23',dateLabel:'Yesterday'},
+  {id:4,title:'Breathe Again',   artist:'Marcus J.',   plays:'1.8M',dl:'340K',cover:'https://picsum.photos/seed/n4/300/300',dur:'4:22',sec:262,pubDate:'2026-07-22',dateLabel:'2 days ago'},
+  {id:5,title:'Tokyo Drift',    artist:'Riku',       plays:'1.5M',dl:'310K',cover:'https://picsum.photos/seed/n5/300/300',dur:'3:15',sec:195,pubDate:'2026-07-21',dateLabel:'3 days ago'},
+  {id:6,title:'City Lights',    artist:'Nova Beats', plays:'1.4M',dl:'290K',cover:'https://picsum.photos/seed/n6/300/300',dur:'3:27',sec:207,pubDate:'2026-07-21',dateLabel:'3 days ago'},
+  {id:7,title:'Sunrise',        artist:'Echo Rivers',plays:'1.2M',dl:'270K',cover:'https://picsum.photos/seed/n7/300/300',dur:'2:55',sec:175,pubDate:'2026-07-20',dateLabel:'4 days ago'},
+  {id:8,title:'Midnight Dreams',  artist:'Luna Sky',    plays:'4.2M',dl:'820K',cover:'https://picsum.photos/seed/t1/300/300',dur:'3:42',sec:222,pubDate:'2026-07-15',dateLabel:'July 15'},
+  {id:9,title:'Electric Feel',    artist:'Nova Beats',  plays:'3.8M',dl:'710K',cover:'https://picsum.photos/seed/t2/300/300',dur:'4:01',sec:241,pubDate:'2026-07-12',dateLabel:'July 12'},
+  {id:10,title:'Lost in the City', artist:'Echo Rivers', plays:'3.1M',dl:'590K',cover:'https://picsum.photos/seed/t3/300/300',dur:'3:28',sec:208,pubDate:'2026-07-10',dateLabel:'July 10'},
+];
+const newSongs=[...songs].sort((a,b)=>new Date(b.pubDate)-new Date(a.pubDate));
+const artists=[
+  {id:1,name:'Luna Sky',    followers:'1.2M',avatar:'https://picsum.photos/seed/a1/150/150'},
+  {id:2,name:'Nova Beats',  followers:'980K', avatar:'https://picsum.photos/seed/a2/150/150'},
+  {id:3,name:'Echo Rivers', followers:'850K', avatar:'https://picsum.photos/seed/a3/150/150'},
+  {id:4,name:'Sunset Vibes',followers:'760K', avatar:'https://picsum.photos/seed/a4/150/150'},
+  {id:5,name:'Pulse Wave',  followers:'620K', avatar:'https://picsum.photos/seed/a5/150/150'},
+  {id:6,name:'Mira Sol',    followers:'540K', avatar:'https://picsum.photos/seed/a6/150/150'},
+  {id:7,name:'Ava Monroe',  followers:'480K', avatar:'https://picsum.photos/seed/a7/150/150'},
+  {id:8,name:'Zion Cole',   followers:'410K', avatar:'https://picsum.photos/seed/a8/150/150'},
+];
+const albums=[
+  {id:1,title:'Midnight Dreams',artist:'Luna Sky',    tracks:12,cover:'https://picsum.photos/seed/al1/300/300'},
+  {id:2,title:'Neon Nights',    artist:'Nova Beats',  tracks:10,cover:'https://picsum.photos/seed/al2/300/300'},
+  {id:3,title:'Lost & Found',   artist:'Echo Rivers', tracks:14,cover:'https://picsum.photos/seed/al3/300/300'},
+  {id:4,title:'Golden Hour',    artist:'Sunset Vibes',tracks:8, cover:'https://picsum.photos/seed/al4/300/300'},
+  {id:5,title:'Electric Pulse', artist:'Pulse Wave',  tracks:15,cover:'https://picsum.photos/seed/al5/300/300'},
+  {id:6,title:'Ocean Eyes',     artist:'Mira Sol',    tracks:11,cover:'https://picsum.photos/seed/al6/300/300'},
+];
+const genres=[
+  {name:'Pop',        color:'#1db954',image:'https://picsum.photos/seed/cat1/400/260'},
+  {name:'Hip-Hop',    color:'#f1c40f',image:'https://picsum.photos/seed/cat2/400/260'},
+  {name:'Electronic', color:'#00d4aa',image:'https://picsum.photos/seed/cat3/400/260'},
+  {name:'R&B',        color:'#8a2be2',image:'https://picsum.photos/seed/cat4/400/260'},
+  {name:'Rock',       color:'#e74c3c',image:'https://picsum.photos/seed/cat5/400/260'},
+  {name:'Indie',      color:'#3498db',image:'https://picsum.photos/seed/cat6/400/260'},
+  {name:'Jazz',       color:'#e67e22',image:'https://picsum.photos/seed/cat7/400/260'},
+  {name:'Classical',  color:'#9b59b6',image:'https://picsum.photos/seed/cat8/400/260'},
+  {name:'Country',    color:'#d35400',image:'https://picsum.photos/seed/cat9/400/260'},
+  {name:'Latin',      color:'#1abc9c',image:'https://picsum.photos/seed/cat10/400/260'},
+  {name:'K-Pop',      color:'#ff6b81',image:'https://picsum.photos/seed/cat11/400/260'},
+  {name:'Metal',      color:'#2c3e50',image:'https://picsum.photos/seed/cat12/400/260'},
+];
+
+/* ═══════════════════════════════════════════════════
+   HELPERS
+═══════════════════════════════════════════════════ */
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/'/g,"\\'");
+const fmt=s=>Math.floor(s/60)+':'+(s%60<10?'0':'')+s%60;
+
+/* Sort Published Songs by Date (Newest First) */
+const sortedPublishedSongs = [...songs].sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+
+/* ═══════════════════════════════════════════════════
+   RENDER TEMPLATES
+═══════════════════════════════════════════════════ */
+function songRow(s,rank){
+  return`<div class="song-row reveal" tabindex="0" role="listitem"
+    onclick="play(${JSON.stringify(s)})"
+    onkeydown="if(event.key==='Enter')this.click()">
+    <span class="rank ${rank<=3?'text-gradient':''}">${rank}</span>
+    <img class="song-row__cover" src="${s.cover}" alt="${esc(s.title)}" loading="lazy">
+    <div style="min-width:0;">
+      <div class="song-row__title">${esc(s.title)}</div>
+      <div class="song-row__artist">${esc(s.artist)}</div>
+    </div>
+    <span class="song-row__dur">${s.dateLabel||s.plays||s.dur||''}</span>
+    <div class="song-row__actions">
+      <button class="btn-fav" onclick="event.stopPropagation();toggleFav(this)" aria-label="Like">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+      </button>
+      <button class="btn-icon" style="width:30px;height:30px;" onclick="event.stopPropagation();toast('Downloading...','success')" aria-label="Download">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      </button>
+    </div>
+  </div>`;
+}
+
+function songCard(s){
+  return`<div class="song-card reveal" tabindex="0" role="listitem"
+    onclick="play(${JSON.stringify(s)})" onkeydown="if(event.key==='Enter')this.click()">
+    <div class="song-card__cover">
+      <img src="${s.cover}" alt="${esc(s.title)}" loading="lazy">
+      <div class="song-card__overlay">
+        <button class="btn-play" tabindex="-1"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg></button>
+      </div>
+      <div style="position:absolute;top:8px;left:8px;z-index:2;"><span class="badge" style="background:rgba(0,0,0,0.7);color:#fff;backdrop-filter:blur(6px);">${s.dateLabel||'Published'}</span></div>
+    </div>
+    <div class="song-card__title">${esc(s.title)}</div>
+    <div class="song-card__artist">${esc(s.artist)}</div>
+  </div>`;
+}
+
+function artistCard(a){
+  return`<div class="artist-card reveal" tabindex="0" role="listitem" onclick="toast('Opening ${esc(a.name)}...','info')">
+    <img class="artist-card__avatar" src="${a.avatar}" alt="${esc(a.name)}" loading="lazy">
+    <div class="artist-card__name">${esc(a.name)}</div>
+    <div class="artist-card__followers">${a.followers} followers</div>
+    <button class="btn-follow btn-sm" onclick="event.stopPropagation();toggleFollow(this,'${esc(a.name)}')">Follow</button>
+  </div>`;
+}
+
+function albumCard(al){
+  return`<div class="album-card reveal" tabindex="0" role="listitem" onclick="toast('Playing ${esc(al.title)}','success')">
+    <div class="album-card__cover">
+      <img src="${al.cover}" alt="${esc(al.title)}" loading="lazy">
+      <div class="song-card__overlay">
+        <button class="btn-play" tabindex="-1" onclick="event.stopPropagation();toast('Playing album','success')"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg></button>
+      </div>
+    </div>
+    <div class="album-card__title">${esc(al.title)}</div>
+    <div class="album-card__artist">${esc(al.artist)}</div>
+    <div style="font-size:0.72rem;color:var(--text-muted);margin-top:2px;">${al.tracks} tracks</div>
+  </div>`;
+}
+
+function genreCard(g){
+  return`<div class="cat-card reveal" style="background:linear-gradient(135deg,${g.color}dd 0%,#111 100%);" tabindex="0" role="button" onclick="toast('Exploring ${g.name}...','info')" onkeydown="if(event.key==='Enter')this.click()">
+    <div class="cat-card__bg" style="background-image:url('${g.image}');"></div>
+    <div class="cat-card__overlay" style="background:linear-gradient(to top,${g.color}cc 0%,rgba(0,0,0,0.4) 100%);"></div>
+    <div class="cat-card__label">${g.name}</div>
+  </div>`;
+}
+
+/* ═══════════════════════════════════════════════════
+   MOUNT ALL SECTIONS (Sorted by Published Date)
+═══════════════════════════════════════════════════ */
+document.getElementById('home-trending-list').innerHTML = sortedPublishedSongs.map((s,i)=>songRow(s,i+1)).join('');
+document.getElementById('home-latest-row').innerHTML = sortedPublishedSongs.map(s=>songCard(s)).join('');
+document.getElementById('home-artists-row').innerHTML = artists.map(a=>artistCard(a)).join('');
+document.getElementById('home-albums-row').innerHTML = albums.map(al=>albumCard(al)).join('');
+document.getElementById('home-genres-grid').innerHTML = genres.slice(0,6).map(g=>genreCard(g)).join('');
+
+document.getElementById('trending-list').innerHTML = sortedPublishedSongs.map((s,i)=>songRow(s,i+1)).join('');
+document.getElementById('latest-row').innerHTML = sortedPublishedSongs.map(s=>songCard(s)).join('');
+document.getElementById('artists-row').innerHTML = artists.map(a=>artistCard(a)).join('');
+document.getElementById('albums-row').innerHTML = albums.map(al=>albumCard(al)).join('');
+document.getElementById('genres-grid').innerHTML = genres.map(g=>genreCard(g)).join('');
+document.getElementById('search-results-list').innerHTML = sortedPublishedSongs.map((s,i)=>songRow(s,i+1)).join('');
+
+/* Live Search Filter Function */
+function filterSearch(query) {
+  const q = query.toLowerCase().trim();
+  const list = document.getElementById('search-results-list');
+  const resultsContainer = document.getElementById('search-results-container');
+  const defaultBrowse = document.getElementById('search-default-browse');
+  
+  if(!q) {
+    resultsContainer.style.display = 'none';
+    defaultBrowse.style.display = 'block';
+    return;
+  }
+  
+  resultsContainer.style.display = 'block';
+  defaultBrowse.style.display = 'none';
+
+  const filtered = songs.filter(s => 
+    s.title.toLowerCase().includes(q) || 
+    s.artist.toLowerCase().includes(q)
+  );
+  if(filtered.length === 0) {
+    list.innerHTML = `<div style="text-align:center;padding:3rem 1rem;color:var(--text-muted);">
+      <div style="font-size:2.5rem;margin-bottom:0.5rem;">🔍</div>
+      <div style="font-weight:600;font-size:1.1rem;color:var(--text-primary);">No songs found</div>
+      <div style="font-size:0.85rem;margin-top:4px;">Try searching for another track or artist</div>
+    </div>`;
+  } else {
+    list.innerHTML = filtered.map((s,i)=>songRow(s,i+1)).join('');
+  }
+}
+
+/* ═══════════════════════════════════════════════════
+   TAB SWITCHING LOGIC (Spotify / Apple Music Style)
+═══════════════════════════════════════════════════ */
+function switchTab(tabId) {
+  // Hide all tab pages
+  document.querySelectorAll('.tab-page').forEach(page => page.classList.remove('active'));
+  
+  // Show target page
+  const target = document.getElementById('tab-' + tabId);
+  if(target) {
+    target.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // Sync nav active states
+  document.querySelectorAll('.navbar__link').forEach(link => {
+    const href = link.getAttribute('href');
+    if(href === '#' + tabId || (tabId === 'home' && href === '#home')) {
+      link.classList.add('active');
+    } else {
+      link.classList.remove('active');
+    }
+  });
+
+  document.querySelectorAll('.mob-nav-item').forEach(link => {
+    const href = link.getAttribute('href');
+    if(href === '#' + tabId || (tabId === 'home' && href === '#home')) {
+      link.classList.add('active');
+    } else {
+      link.classList.remove('active');
+    }
+  });
+
+  // Trigger scroll reveal observer for newly shown tab
+  setTimeout(setupReveal, 60);
+}
+
+/* ═══════════════════════════════════════════════════
+   SCROLL REVEAL (IntersectionObserver)
+═══════════════════════════════════════════════════ */
+function setupReveal(){
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        e.target.classList.add('visible');
+        io.unobserve(e.target);
+      }
+    });
+  },{threshold:0.1,rootMargin:'0px 0px -40px 0px'});
+  document.querySelectorAll('.reveal,.reveal-left,.reveal-scale').forEach(el=>io.observe(el));
+}
+// Run immediately AND after a tick (for dynamic content)
+setupReveal();
+requestAnimationFrame(()=>{setTimeout(setupReveal, 80);});
+
+/* ═══════════════════════════════════════════════════
+   PLAYER
+═══════════════════════════════════════════════════ */
+let isPlaying=false, currentSong=null, currentIdx=0, progPct=0, interval=null;
+
+function play(s){
+  currentSong=s; currentIdx=songs.findIndex(x=>x.id===s.id);
+  document.getElementById('p-cover').src=s.cover;
+  document.getElementById('p-title').textContent=s.title;
+  document.getElementById('p-artist').textContent=s.artist;
+  document.getElementById('p-cover').classList.add('playing');
+  isPlaying=true; progPct=0;
+  updatePlayIcons();
+  clearInterval(interval);
+  const total=s.sec||240;
+  document.getElementById('tot-time').textContent=fmt(total);
+  document.getElementById('prog-fill').style.width='0%';
+  const mobFill = document.getElementById('mob-prog-fill');
+  if(mobFill) mobFill.style.width='0%';
+  document.getElementById('cur-time').textContent='0:00';
+  interval=setInterval(()=>{
+    progPct=Math.min(progPct+(100/(total*2)),100);
+    document.getElementById('prog-fill').style.width=progPct+'%';
+    const mf = document.getElementById('mob-prog-fill');
+    if(mf) mf.style.width=progPct+'%';
+    document.getElementById('cur-time').textContent=fmt(Math.floor(total*progPct/100));
+    if(progPct>=100){
+      clearInterval(interval);
+      isPlaying=false;
+      updatePlayIcons();
+      document.getElementById('p-cover').classList.remove('playing');
+      document.querySelector('.disc')?.classList.add('paused');
+      const lbl = document.getElementById('hero-status-lbl');
+      if(lbl) lbl.textContent = 'Paused';
+    }
+  },500);
+  document.getElementById('player-bars').classList.remove('paused');
+  document.getElementById('hero-bars')?.classList.remove('paused');
+  document.querySelector('.disc')?.classList.remove('paused');
+  const lbl = document.getElementById('hero-status-lbl');
+  if(lbl) lbl.textContent = 'Now Playing';
+  toast('▶ '+s.title+' — '+s.artist,'success');
+}
+
+function togglePlay(){
+  if(!currentSong){play(songs[0]);return;}
+  const disc = document.querySelector('.disc');
+  const lbl = document.getElementById('hero-status-lbl');
+
+  if(isPlaying){
+    // PAUSE MUSIC
+    isPlaying=false;
+    clearInterval(interval);
+    interval=null;
+    updatePlayIcons();
+    document.getElementById('player-bars')?.classList.add('paused');
+    document.getElementById('hero-bars')?.classList.add('paused');
+    document.getElementById('p-cover')?.classList.remove('playing');
+    document.getElementById('np-art')?.classList.add('spinning-paused');
+    disc?.classList.add('paused');
+    if(lbl) lbl.textContent = 'Paused';
+    toast('⏸ Paused','info');
+  } else {
+    // RESUME MUSIC
+    isPlaying=true;
+    updatePlayIcons();
+    clearInterval(interval);
+    const total=currentSong.sec||240;
+    interval=setInterval(()=>{
+      if(!isPlaying) return;
+      progPct=Math.min(progPct+(100/(total*2)),100);
+      document.getElementById('prog-fill').style.width=progPct+'%';
+      const mf = document.getElementById('mob-prog-fill');
+      if(mf) mf.style.width=progPct+'%';
+      document.getElementById('cur-time').textContent=fmt(Math.floor(total*progPct/100));
+      if(progPct>=100){
+        clearInterval(interval);
+        interval=null;
+        isPlaying=false;
+        updatePlayIcons();
+        document.getElementById('p-cover')?.classList.remove('playing');
+        document.getElementById('player-bars')?.classList.add('paused');
+        document.getElementById('hero-bars')?.classList.add('paused');
+        disc?.classList.add('paused');
+        if(lbl) lbl.textContent = 'Paused';
+      }
+    },500);
+    document.getElementById('player-bars')?.classList.remove('paused');
+    document.getElementById('hero-bars')?.classList.remove('paused');
+    document.getElementById('p-cover')?.classList.add('playing');
+    document.getElementById('np-art')?.classList.remove('spinning-paused');
+    disc?.classList.remove('paused');
+    if(lbl) lbl.textContent = 'Now Playing';
+  }
+}
+
+function updatePlayIcons(){
+  const pauseSVG='<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>';
+  const playSVG='<polygon points="5,3 19,12 5,21"/>';
+  document.getElementById('play-icon').innerHTML=isPlaying?pauseSVG:playSVG;
+  const mob=document.getElementById('mob-play-icon');
+  if(mob) mob.innerHTML=isPlaying?pauseSVG:playSVG;
+}
+
+function nextSong(){
+  currentIdx=(currentIdx+1)%songs.length;
+  play(songs[currentIdx]);
+}
+function prevSong(){
+  currentIdx=(currentIdx-1+songs.length)%songs.length;
+  play(songs[currentIdx]);
+}
+function seekTo(e){
+  const r=e.currentTarget.getBoundingClientRect();
+  progPct=Math.max(0,Math.min(100,((e.clientX-r.left)/r.width)*100));
+  document.getElementById('prog-fill').style.width=progPct+'%';
+  const mf = document.getElementById('mob-prog-fill');
+  if(mf) mf.style.width=progPct+'%';
+  if(currentSong) document.getElementById('cur-time').textContent=fmt(Math.floor((currentSong.sec||240)*progPct/100));
+}
+
+/* ═══════════════════════════════════════════════════
+   THEME
+═══════════════════════════════════════════════════ */
+let dark=true;
+function toggleTheme(){
+  dark=!dark;
+  document.documentElement.setAttribute('data-theme',dark?'dark':'light');
+  document.getElementById('theme-track').classList.toggle('on',!dark);
+  document.getElementById('theme-thumb').textContent=dark?'🌙':'☀️';
+  document.getElementById('theme-icon').textContent=dark?'🌙':'☀️';
+  const ml=document.getElementById('mob-theme-label');
+  const mi=document.getElementById('mob-theme-icon');
+  if(ml) ml.textContent=dark?'Dark Mode':'Light Mode';
+  if(mi) mi.textContent=dark?'🌙':'☀️';
+  localStorage.setItem('bw-theme',dark?'dark':'light');
+}
+// Restore
+const saved=localStorage.getItem('bw-theme');
+if(saved==='light'){dark=false;document.documentElement.setAttribute('data-theme','light');document.getElementById('theme-track').classList.add('on');document.getElementById('theme-thumb').textContent='☀️';document.getElementById('theme-icon').textContent='☀️';const ml=document.getElementById('mob-theme-label');if(ml){ml.textContent='Light Mode';}const mi=document.getElementById('mob-theme-icon');if(mi){mi.textContent='☀️';}}
+
+/* ═══════════════════════════════════════════════════
+   MOBILE MENU
+═══════════════════════════════════════════════════ */
+function toggleMenu(){
+  const ham=document.getElementById('hamburger');
+  const drawer=document.getElementById('mobile-drawer');
+  ham.classList.toggle('open');
+  drawer.classList.toggle('open');
+  ham.setAttribute('aria-expanded',drawer.classList.contains('open'));
+  drawer.setAttribute('aria-hidden',!drawer.classList.contains('open'));
+  document.body.style.overflow=drawer.classList.contains('open')?'hidden':'';
+}
+function closeMenu(){
+  document.getElementById('hamburger').classList.remove('open');
+  document.getElementById('mobile-drawer').classList.remove('open');
+  document.getElementById('hamburger').setAttribute('aria-expanded','false');
+  document.getElementById('mobile-drawer').setAttribute('aria-hidden','true');
+  document.body.style.overflow='';
+}
+
+/* ═══════════════════════════════════════════════════
+   NAVBAR SCROLL EFFECT
+═══════════════════════════════════════════════════ */
+window.addEventListener('scroll',()=>{
+  document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>40);
+},{ passive:true });
+
+/* Active nav link on scroll */
+function setActive(el){
+  document.querySelectorAll('.navbar__link,.mob-link').forEach(l=>l.classList.remove('active'));
+  el.classList.add('active');
+}
+function setActiveMob(el){
+  document.querySelectorAll('.mob-nav-item').forEach(l=>l.classList.remove('active'));
+  el.classList.add('active');
+}
+
+/* ═══════════════════════════════════════════════════
+   TOAST
+═══════════════════════════════════════════════════ */
+const icons={success:'✅',info:'ℹ️',error:'❌',warning:'⚠️'};
+const icolors={success:'var(--success)',info:'var(--accent)',error:'var(--error)',warning:'var(--warning)'};
+function toast(msg,type='info'){
+  const t=document.createElement('div');
+  t.className='toast';
+  t.style.borderLeft=`3px solid ${icolors[type]||icolors.info}`;
+  t.innerHTML=`<span>${icons[type]||'ℹ️'}</span><span style="flex:1;">${msg}</span>`;
+  document.getElementById('toasts').appendChild(t);
+  setTimeout(()=>{t.classList.add('out');setTimeout(()=>t.remove(),300);},3200);
+}
+
+/* ═══════════════════════════════════════════════════
+   FAVORITES
+═══════════════════════════════════════════════════ */
+function toggleFav(btn){
+  btn.classList.toggle('active');
+  const svg=btn.querySelector('svg');
+  svg.setAttribute('fill',btn.classList.contains('active')?'var(--accent2)':'none');
+  svg.setAttribute('stroke',btn.classList.contains('active')?'var(--accent2)':'currentColor');
+  toast(btn.classList.contains('active')?'Added to favorites ❤️':'Removed from favorites','info');
+}
+function toggleFollow(btn,name){
+  btn.classList.toggle('following');
+  btn.textContent=btn.classList.contains('following')?'Following ✓':'Follow';
+  toast(btn.classList.contains('following')?`Following ${name}! 🎤`:`Unfollowed ${name}`,'info');
+}
+
+/* ═══════════════════════════════════════════════════
+   SEARCH
+═══════════════════════════════════════════════════ */
+document.getElementById('search-input').addEventListener('keydown',function(e){
+  if(e.key==='Enter'&&this.value.trim()){
+    const q=this.value.trim().toLowerCase();
+    const m=songs.filter(s=>s.title.toLowerCase().includes(q)||s.artist.toLowerCase().includes(q));
+    toast(m.length?`Found ${m.length} result(s) for "${this.value}"`:`No results for "${this.value}"`,'info');
+  }
+});
+</script>
+
+<!-- ══ FULL-SCREEN NOW PLAYING MODAL ══════════════ -->
+<style>
+/* === NOW PLAYING MODAL === */
+@keyframes npSlideUp{from{transform:translateY(100%);opacity:0;}to{transform:none;opacity:1;}}
+@keyframes npSlideDown{from{transform:none;opacity:1;}to{transform:translateY(100%);opacity:0;}}
+@keyframes coverPop{0%{transform:scale(0.82);}60%{transform:scale(1.04);}100%{transform:scale(1);}}
+@keyframes rotateCover{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+
+.np-overlay{
+  position:fixed;inset:0;z-index:300;
+  background:rgba(0,0,0,0.55);backdrop-filter:blur(8px);
+  opacity:0;pointer-events:none;transition:opacity 0.35s;
+}
+.np-overlay.open{opacity:1;pointer-events:all;}
+
+.np-modal{
+  position:fixed;left:0;right:0;bottom:0;z-index:301;
+  height:100dvh;max-height:100dvh;
+  display:flex;flex-direction:column;
+  border-radius:28px 28px 0 0;overflow:hidden;
+  transform:translateY(100%);transition:transform 0.45s cubic-bezier(0.22,1,0.36,1);
+}
+.np-modal.open{transform:none;}
+
+/* Gradient background from album color */
+.np-bg{
+  position:absolute;inset:0;
+  background:linear-gradient(180deg,var(--np-color1,#2d1b6e) 0%,var(--np-color2,#0a0a0f) 65%);
+  transition:background 0.8s ease;z-index:0;
+}
+.np-bg::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(to bottom,transparent 50%,rgba(0,0,0,0.85) 100%);
+}
+
+/* Content */
+.np-content{position:relative;z-index:1;display:flex;flex-direction:column;height:100%;padding:0 1.5rem 2rem;}
+
+/* Drag handle */
+.np-handle{width:40px;height:4px;border-radius:99px;background:rgba(255,255,255,0.3);margin:14px auto 0;}
+
+/* Top bar */
+.np-topbar{display:flex;align-items:center;justify-content:space-between;padding:1rem 0 0.5rem;}
+.np-topbar-title{font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:rgba(255,255,255,0.6);text-align:center;flex:1;}
+.np-close{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;color:#fff;transition:all 0.15s;flex-shrink:0;}
+.np-close:hover{background:rgba(255,255,255,0.2);transform:scale(1.08);}
+.np-more{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;color:#fff;transition:all 0.15s;flex-shrink:0;}
+
+/* Album art */
+.np-art-wrap{
+  flex:1;display:flex;align-items:center;justify-content:center;
+  padding:1.5rem 0;max-height:360px;min-height:200px;
+}
+.np-art{
+  width:min(280px,72vw);height:min(280px,72vw);
+  border-radius:20px;overflow:hidden;
+  box-shadow:0 28px 80px rgba(0,0,0,0.7),0 0 0 1px rgba(255,255,255,0.08);
+  position:relative;
+}
+.np-art img{width:100%;height:100%;object-fit:cover;transition:transform 0.5s cubic-bezier(0.22,1,0.36,1);}
+.np-art.pop img{animation:coverPop 0.5s var(--ease-spring) both;}
+.np-art.spinning img{border-radius:50%;animation:rotateCover 8s linear infinite;}
+.np-art.spinning-paused img{animation-play-state:paused;}
+
+/* Song info */
+.np-info{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1.25rem;}
+.np-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:1.35rem;font-weight:800;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.np-artist{font-size:0.88rem;color:rgba(255,255,255,0.65);margin-top:2px;}
+.np-fav{flex-shrink:0;color:rgba(255,255,255,0.5);transition:all 0.15s;}
+.np-fav:hover,.np-fav.active{color:#ff4785;transform:scale(1.15);}
+.np-fav.active svg{fill:#ff4785;stroke:#ff4785;}
+
+/* Progress */
+.np-prog-wrap{margin-bottom:1.25rem;}
+.np-prog-bar{
+  height:5px;border-radius:99px;background:rgba(255,255,255,0.2);
+  position:relative;cursor:pointer;margin-bottom:0.5rem;
+}
+.np-prog-bar:hover{height:7px;}
+.np-prog-fill{height:100%;border-radius:99px;background:#fff;transition:width 0.1s linear;position:relative;}
+.np-prog-fill::after{
+  content:'';position:absolute;right:-6px;top:50%;transform:translateY(-50%);
+  width:14px;height:14px;border-radius:50%;background:#fff;
+  box-shadow:0 0 0 3px rgba(255,255,255,0.3);
+  opacity:0;transition:opacity 0.2s;
+}
+.np-prog-bar:hover .np-prog-fill::after{opacity:1;}
+.np-times{display:flex;justify-content:space-between;font-size:0.72rem;font-weight:500;color:rgba(255,255,255,0.5);}
+
+/* Controls */
+.np-controls{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;}
+.np-ctrl{color:rgba(255,255,255,0.55);transition:all 0.15s;padding:6px;border-radius:8px;}
+.np-ctrl:hover{color:#fff;transform:scale(1.12);}
+.np-ctrl.active{color:#fff;}
+.np-play-btn{
+  width:64px;height:64px;border-radius:50%;
+  background:#fff;color:#111;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 8px 28px rgba(0,0,0,0.5);
+  transition:all 0.2s cubic-bezier(0.34,1.56,0.64,1);
+}
+.np-play-btn:hover{transform:scale(1.08);box-shadow:0 12px 36px rgba(0,0,0,0.6);}
+.np-play-btn:active{transform:scale(0.95);}
+
+/* Volume */
+.np-volume{display:flex;align-items:center;gap:0.75rem;margin-bottom:1.25rem;}
+.np-vol-bar{flex:1;height:4px;border-radius:99px;background:rgba(255,255,255,0.2);overflow:hidden;cursor:pointer;}
+.np-vol-fill{width:70%;height:100%;border-radius:99px;background:rgba(255,255,255,0.8);}
+
+/* Extra actions */
+.np-actions{display:flex;align-items:center;justify-content:space-around;}
+.np-action{display:flex;flex-direction:column;align-items:center;gap:4px;color:rgba(255,255,255,0.55);font-size:0.7rem;font-weight:600;transition:all 0.15s;padding:6px 10px;border-radius:10px;}
+.np-action:hover{color:#fff;background:rgba(255,255,255,0.1);}
+
+/* Mini player clickable */
+.player__song{cursor:pointer;}
+.player__song:hover .player__cover{transform:scale(1.06);}
+
+/* ONLY SHOW FULL SCREEN PLAYER ON MOBILE (max-width: 768px) */
+@media(min-width:769px){
+  .np-modal, .np-overlay {
+    display: none !important;
+  }
+}
+
+@media(max-width:768px){
+  .np-modal {
+    border-radius: 0;
+    height: 100vh;
+    max-height: 100vh;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+  .np-content {
+    padding: 0 1.25rem 2.5rem;
+    justify-content: space-between;
+  }
+}
+</style>
+
+<!-- Overlay -->
+<div class="np-overlay" id="np-overlay" onclick="closeNowPlaying()"></div>
+
+<!-- Full Screen Now Playing -->
+<div class="np-modal" id="np-modal" role="dialog" aria-modal="true" aria-label="Now Playing">
+  <div class="np-bg" id="np-bg"></div>
+  <div class="np-content">
+    <div class="np-handle"></div>
+    <div class="np-topbar">
+      <button class="np-close" onclick="closeNowPlaying()" aria-label="Close player">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+      </button>
+      <div class="np-topbar-title" id="np-from">Now Playing</div>
+      <button class="np-more" aria-label="More options" onclick="toast('Options coming soon!','info')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+      </button>
+    </div>
+
+    <!-- Album Art -->
+    <div class="np-art-wrap">
+      <div class="np-art" id="np-art">
+        <img id="np-cover" src="https://picsum.photos/seed/default/400/400" alt="Album art">
+      </div>
+    </div>
+
+    <!-- Song Info -->
+    <div class="np-info">
+      <div style="min-width:0;">
+        <div class="np-title" id="np-title">Song Title</div>
+        <div class="np-artist" id="np-artist">Artist Name</div>
+      </div>
+      <button class="np-fav" id="np-fav-btn" aria-label="Add to favorites" onclick="toggleNpFav()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+      </button>
+    </div>
+
+    <!-- Progress -->
+    <div class="np-prog-wrap">
+      <div class="np-prog-bar" id="np-prog-bar" onclick="seekNp(event)" role="slider" aria-label="Progress">
+        <div class="np-prog-fill" id="np-prog-fill" style="width:0%"></div>
+      </div>
+      <div class="np-times">
+        <span id="np-cur">0:00</span>
+        <span id="np-tot">0:00</span>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="np-controls">
+      <button class="np-ctrl" id="np-shuffle" aria-label="Shuffle" onclick="this.classList.toggle('active');toast('Shuffle '+(this.classList.contains('active')?'on':'off'),'info')">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+      </button>
+      <button class="np-ctrl" aria-label="Previous" onclick="prevSong()">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><polygon points="19 20 9 12 19 4 19 20"/><rect x="4" y="4" width="3" height="16" rx="1"/></svg>
+      </button>
+      <button class="np-play-btn" id="np-play-btn" aria-label="Play/Pause" onclick="togglePlay()">
+        <svg id="np-play-icon" width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+      </button>
+      <button class="np-ctrl" aria-label="Next" onclick="nextSong()">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 4 15 12 5 20 5 4"/><rect x="17" y="4" width="3" height="16" rx="1"/></svg>
+      </button>
+      <button class="np-ctrl" id="np-repeat" aria-label="Repeat" onclick="this.classList.toggle('active');toast('Repeat '+(this.classList.contains('active')?'on':'off'),'info')">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 014-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
+      </button>
+    </div>
+
+    <!-- Volume -->
+    <div class="np-volume">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/></svg>
+      <div class="np-vol-bar" id="np-vol-bar" onclick="setVolNp(event)" role="slider" aria-label="Volume">
+        <div class="np-vol-fill" id="np-vol-fill"></div>
+      </div>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07"/></svg>
+    </div>
+
+    <!-- Extra Actions -->
+    <div class="np-actions">
+      <button class="np-action" onclick="toast('Added to queue!','success')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        Queue
+      </button>
+      <button class="np-action" onclick="toast('Downloading...','success')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download
+      </button>
+      <button class="np-action" onclick="toast('Link copied! 🔗','success')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        Share
+      </button>
+      <button class="np-action" onclick="toast('Added to playlist!','success')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add to
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* === NOW PLAYING MODAL === */
+let npFaved = false;
+// Accent colors for background gradient per song seed
+const accentColors=[
+  ['#2d1b6e','#0a0a14'],['#1a2a4a','#0a0f1a'],['#1a3a2a','#0a140a'],
+  ['#3a1a2a','#140a0f'],['#1a1a3a','#0a0a14'],['#2a2a1a','#0f0f0a'],
+  ['#3a1a1a','#140a0a'],['#2a1a3a','#0f0a14'],['#1a2a3a','#0a0f14'],
+  ['#3a2a1a','#140f0a']
+];
+
+function openNowPlaying(s) {
+  if (window.innerWidth > 768) return; // Only open full-screen player on mobile devices!
+  const modal = document.getElementById('np-modal');
+  const overlay = document.getElementById('np-overlay');
+  // Update content
+  document.getElementById('np-cover').src = s.cover;
+  document.getElementById('np-title').textContent = s.title;
+  document.getElementById('np-artist').textContent = s.artist;
+  document.getElementById('np-tot').textContent = s.dur || '0:00';
+  document.getElementById('np-from').textContent = 'From ' + (s.genre || 'BeatWave');
+  // Sync progress from main player
+  document.getElementById('np-prog-fill').style.width = progPct + '%';
+  document.getElementById('np-cur').textContent = document.getElementById('cur-time').textContent;
+  // Gradient bg
+  const idx = (s.id - 1) % accentColors.length;
+  document.getElementById('np-bg').style.background =
+    `linear-gradient(180deg,${accentColors[idx][0]} 0%,${accentColors[idx][1]} 65%)`;
+  // Art animation
+  const art = document.getElementById('np-art');
+  art.classList.remove('pop');
+  void art.offsetWidth; // reflow
+  art.classList.add('pop');
+  // Open
+  overlay.classList.add('open');
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  updateNpPlayIcon();
+}
+
+function closeNowPlaying() {
+  document.getElementById('np-modal').classList.remove('open');
+  document.getElementById('np-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function updateNpPlayIcon() {
+  const pause = '<rect x="5" y="4" width="4" height="16" rx="1"/><rect x="15" y="4" width="4" height="16" rx="1"/>';
+  const playIcon = '<polygon points="5,3 19,12 5,21"/>';
+  const el = document.getElementById('np-play-icon');
+  if (el) el.innerHTML = isPlaying ? pause : playIcon;
+}
+
+function seekNp(e) {
+  const r = e.currentTarget.getBoundingClientRect();
+  progPct = Math.max(0, Math.min(100, ((e.clientX - r.left) / r.width) * 100));
+  document.getElementById('np-prog-fill').style.width = progPct + '%';
+  document.getElementById('prog-fill').style.width = progPct + '%';
+  if (currentSong) {
+    const t = Math.floor((currentSong.sec||240) * progPct / 100);
+    document.getElementById('np-cur').textContent = fmt(t);
+    document.getElementById('cur-time').textContent = fmt(t);
+  }
+}
+
+function toggleNpFav() {
+  npFaved = !npFaved;
+  const btn = document.getElementById('np-fav-btn');
+  btn.classList.toggle('active', npFaved);
+  const svg = btn.querySelector('svg');
+  svg.setAttribute('fill', npFaved ? '#ff4785' : 'none');
+  svg.setAttribute('stroke', npFaved ? '#ff4785' : 'currentColor');
+  toast(npFaved ? 'Added to favorites ❤️' : 'Removed from favorites', 'info');
+}
+
+function setVolNp(e) {
+  const r = e.currentTarget.getBoundingClientRect();
+  const pct = Math.max(0, Math.min(100, ((e.clientX - r.left) / r.width) * 100));
+  document.getElementById('np-vol-fill').style.width = pct + '%';
+}
+
+// Sync np progress while playing
+const _origInterval = setInterval;
+let npSyncTimer = null;
+function startNpSync() {
+  clearInterval(npSyncTimer);
+  npSyncTimer = setInterval(()=>{
+    if(document.getElementById('np-modal').classList.contains('open')){
+      document.getElementById('np-prog-fill').style.width = progPct + '%';
+      document.getElementById('np-cur').textContent = document.getElementById('cur-time').textContent;
+      updateNpPlayIcon();
+    }
+  }, 500);
+}
+startNpSync();
+
+// === PATCH play() to update playback without auto-opening modal ===
+const _origPlay = play;
+window.play = function(s) {
+  _origPlay(s);
+  // Modal will ONLY open when tapping song title/cover in mini player, NOT auto-opened on play
+};
+
+// === PATCH togglePlay() to update np icon ===
+const _origToggle = togglePlay;
+window.togglePlay = function() {
+  _origToggle();
+  setTimeout(updateNpPlayIcon, 50);
+};
+
+// === Mini player song title/cover click opens NP modal ===
+document.querySelector('.player__song').addEventListener('click', function(e) {
+  if (!e.target.closest('#p-fav')) {
+    const s = currentSong || songs[0];
+    openNowPlaying(s);
+  }
+});
+
+// Swipe down to close on mobile
+let touchStartY = 0;
+document.getElementById('np-modal').addEventListener('touchstart', e=>{
+  touchStartY = e.touches[0].clientY;
+}, {passive:true});
+document.getElementById('np-modal').addEventListener('touchend', e=>{
+  const dy = e.changedTouches[0].clientY - touchStartY;
+  if(dy > 80) closeNowPlaying();
+}, {passive:true});
+
+// Keyboard ESC to close
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeNowPlaying(); });
+
+// Patch nextSong / prevSong to update np if open
+const _origNext = nextSong;
+window.nextSong = function(){
+  _origNext();
+  if(currentSong && document.getElementById('np-modal').classList.contains('open')){
+    setTimeout(()=>openNowPlaying(currentSong), 80);
+  }
+};
+const _origPrev = prevSong;
+window.prevSong = function(){
+  _origPrev();
+  if(currentSong && document.getElementById('np-modal').classList.contains('open')){
+    setTimeout(()=>openNowPlaying(currentSong), 80);
+  }
+};
+</script>
+</body>
+</html>
